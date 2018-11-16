@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Stop watching by pressing ctrl-c ..."
+sleep 3
+tail -f te.log
