@@ -15,7 +15,7 @@ function failed_to_start() {
 
 echo "Starting tutorial Hero Create Specification."
 echo
-echo "If unresponse for too long (> 30 seconds), abort by pressing ctrl-c."
+echo "If unresponsive for too long (> 30 seconds), abort by pressing ctrl-c."
 sleep 3
 
 BRANCH=hero-create-specification docker-compose up > te.log &
