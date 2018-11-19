@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Stopping test-editor-web ..."
-# make sure old test runs do not interfer with next startup
+# make sure old test runs do not interfere with next startup
 docker exec heroes_persistence_1 find /opt/testeditor/repo -type f -regex ".*/logs/.*\(log\|yaml\)" -exec rm {} \;
 docker exec heroes_persistence_1 find /opt/testeditor/repo -type f -regex ".*/screenshots/.*" -exec rm {} \;
 docker exec heroes_persistence_1 find /opt/testeditor/repo -type f -regex ".*/\.testexecution/.*" -exec rm {} \;
