@@ -13,7 +13,7 @@ function failed_to_start() {
   kill -s TERM $TOP_PID
 }
 
-echo "Starting tutorial Hero Create Specification."
+echo "Starting tutorial: Create Hero Specification."
 echo
 echo "If unresponsive for too long (> 30 seconds), abort by pressing ctrl-c."
 sleep 3
