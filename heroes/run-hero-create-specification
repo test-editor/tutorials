@@ -43,13 +43,13 @@ CHROME=$(which chrome 2> /dev/null)
 CHROMIUM=$(which chromium-browser 2> /dev/null)
 
 if [ "$FIREFOX" != "" ]; then
-  echo "firefox ..." &
-  $FIREFOX http://localhost:4200
+  echo "firefox ..." 
+  $FIREFOX http://localhost:4200 &
 elif [ "$CHROMIUM" != "" ]; then
-  echo "chromium ..." &
-  $CHROMIUM http://localhost:4200
+  echo "chromium ..." 
+  $CHROMIUM http://localhost:4200 &
 elif [ "$CHROME" != "" ]; then
-  echo "firefox ..."
+  echo "chrome ..."
   $CHROME http://localhost:4200 &
 else
   echo "browser failed."
