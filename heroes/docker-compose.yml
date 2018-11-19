@@ -1,17 +1,22 @@
-version: "3.5"
+version: "2.1"
 services:
   sut:
     image: testeditor/angular-sut:snapshot
     ports:
       - "4300:4200"
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
   gitrepo:
     image: testeditor/git-examples:snapshot
     ports:
       - "2222:22"
     healthcheck:
       test: ["CMD-SHELL", "/git-server/healthcheck.sh"]
-      interval: 1m
-      timeout: 10s
+      interval: 5s
+      timeout: 3s
       retries: 3
   persistence:
     image: testeditor/persistence:snapshot
@@ -51,14 +56,14 @@ services:
       BRANCH_NAME: "tutorial/${BRANCH:-hero-create-specification}"
       TIMEZONE: Europe/Berlin
     depends_on:
-      - gitrepo
-      - sut
+      gitrepo:
+        condition: service_healthy
+      sut:
+        condition: service_healthy
   xtext:
     image: testeditor/xtext:snapshot
     ports:
       - "8080:8080"
-    volumes:
-      - ./proxy.cert:/proxy.cert
     environment:
       ADD_KNOWN_HOSTS_DOMAIN: "gitrepo:22"
       GIT_PRIVATE_KEY: |
@@ -93,8 +98,8 @@ services:
       BRANCH_NAME: "tutorial/${BRANCH:-hero-create-specification}"
       TIMEZONE: Europe/Berlin
     depends_on:
-      - gitrepo
-    command: [ "./wait-for-it.sh", "gitrepo:22", "--", "./run.ssh" ]
+      gitrepo:
+        condition: service_healthy
   web:
     image: testeditor/web:snapshot
     ports:
