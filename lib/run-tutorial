@@ -1,5 +1,5 @@
 #!/bin/bash
-rm te.log 2> /dev/null
+echo "starting up" > te.log
 trap "exit 1" TERM
 export TOP_PID=$$
 
@@ -19,7 +19,7 @@ echo
 echo "If unresponsive for too long (> 30 seconds), abort by pressing ctrl-c."
 sleep 3
 
-BRANCH=$1 docker-compose up > te.log &
+BRANCH=$1 docker-compose up >> te.log &
 CNT=0
 TCNT=0
 echo "Waiting for the test-editor-web components to download ..."
