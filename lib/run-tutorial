@@ -1,0 +1,60 @@
+#!/bin/bash
+trap "exit 1" TERM
+export TOP_PID=$$
+
+function failed_to_start() {
+  echo
+  echo "Failed to start test-editor-web ..."
+  echo "Stopping half started containers ..."
+  docker-compose down
+  echo "Stopped containers."
+  echo "Please retry with the now completely downloaded images."
+  echo "It should start (much) faster."
+  kill -s TERM $TOP_PID
+}
+
+echo "Starting tutorial: $2."
+echo
+echo "If unresponsive for too long (> 30 seconds), abort by pressing ctrl-c."
+sleep 3
+
+BRANCH=$1 docker-compose up > te.log &
+CNT=0
+TCNT=0
+echo "Waiting for the test-editor-web components to download ..."
+tail -f te.log | while read LOGLINE
+do
+   TCNT=$((TCNT+1))
+   CNT=$((CNT+1))
+   if [ "$TCNT" -eq 1 ]; then
+     echo "Starting up backends (initialize java, dropwizard, gradle) ..."
+   fi
+   echo -n "."
+   if [ "$CNT" -gt 35 ]; then CNT=0; echo ""; fi
+   echo $LOGLINE | grep -q -e "xtext_1.*INFO.*org.eclipse.jetty.server.Server: Started @.*ms" && pkill -P $$ tail
+   echo $LOGLINE | grep -q -e "xtext_1 exited with code" && pkill -P $$ tail && failed_to_start
+done
+echo ""
+echo "Backends initialized."
+echo -n "Starting "
+
+FIREFOX=$(which firefox 2> /dev/null)
+CHROME=$(which chrome 2> /dev/null)
+CHROMIUM=$(which chromium-browser 2> /dev/null)
+
+if [ "$FIREFOX" != "" ]; then
+  echo "firefox ..."
+  $FIREFOX http://localhost:4200 &
+elif [ "$CHROMIUM" != "" ]; then
+  echo "chromium ..."
+  $CHROMIUM http://localhost:4200 &
+elif [ "$CHROME" != "" ]; then
+  echo "chrome ..."
+  $CHROME http://localhost:4200 &
+else
+  echo "browser failed."
+  echo "No valid browser found."
+  exit 1
+fi
+echo "Started test-editor-web"
+exit 0
