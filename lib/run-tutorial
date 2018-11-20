@@ -1,4 +1,5 @@
 #!/bin/bash
+rm te.log 2> /dev/null
 trap "exit 1" TERM
 export TOP_PID=$$
 
