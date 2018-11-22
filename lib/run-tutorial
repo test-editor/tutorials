@@ -7,7 +7,7 @@ function failed_to_start() {
   echo
   echo "Failed to start test-editor-web ..."
   echo "Stopping half started containers ..."
-  docker-compose down
+  docker-compose stop
   echo "Stopped containers."
   echo "Please retry with the now completely downloaded images."
   echo "It should start (much) faster."
@@ -19,6 +19,7 @@ echo
 echo "If unresponsive for too long (> 30 seconds), abort by pressing ctrl-c."
 sleep 3
 
+BRANCH=$1 docker-compose pull
 BRANCH=$1 docker-compose up >> te.log &
 CNT=0
 TCNT=0

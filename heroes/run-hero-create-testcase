@@ -1,2 +1,2 @@
 #!/bin/bash
-../lib/run-tutorial hero-create-testcase "Create Hero - Test Case"
+bash ../lib/run-tutorial hero-create-testcase "Create Hero - Test Case"
