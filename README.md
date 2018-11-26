@@ -30,5 +30,5 @@ To keep the changes you made, you can run `bash save-repo`. This will create an 
 
 ## System log
 
-The containers write into a log file (`te.log`) that can be watched (`bash watch-log`) to get a glimpse of the inner workings of these containers.
+The containers write into a log file (`te.log`) in the root folder of the tutorials, that can be watched (`bash watch-log`) to get a glimpse of the inner workings of these containers.
 
