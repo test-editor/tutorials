@@ -4,7 +4,7 @@ This repository holds all necessary scripts, compose files etc. to locally start
 
 ## Tour of Heroes
 
-This tutorial series is using the tour of heroes example application used in angular tutorials (see here).
+This tutorial series is using the tour of heroes example application used in angular tutorials [see here](https://angular.io/tutorial).
 
 ### Start tutorial
 
