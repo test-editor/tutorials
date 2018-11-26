@@ -8,7 +8,7 @@ This tutorial series is using the tour of heroes example application used in ang
 
 ### Start tutorial
 
-In order to start the first tutorial, clone this repository and change into the root folder of this repository (default is `tutorials`).
+In order to start the first tutorial, clone this repository and change into the root folder of this repository (default folder name is `tutorials`).
 The tour of heroes tutorials start scripts are all located in the `heroes` folder. Within that folder issue
 * `bash run-hero-create-specification` to start the specification tutorial
 * `bash run-hero-create-testcase` to start the test case tutorial
