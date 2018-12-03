@@ -1,9 +1,71 @@
 #!/bin/bash
+function usage() {
+  echo "Helpscreen for $(basename $0) (option parameter apply to tutorial bash scripts, too, see details)"
+  echo "  PLEASE USE run-... TUTORIAL SCRIPTS. DO NOT USE THIS SCRIPT DIRECTLY."
+  echo
+  echo "  $(basename $0) <branch-name> <tutorial-name> -h|--help -r|--repository <repository-url> -n|--network <docker-network-to-join> -d|--dry-run"
+  echo
+  echo "    -d|--dry-run:    prepare to run, configure but do not execute any docker commands"
+  echo "    -h|--help:       prints this screen"
+  echo "    -n|--network:    join the given docker network instead of spinning up a new one"
+  echo "    -r|--repository: use the given repository instead of the default (https://github.com/test-editor/language-examples)"
+  echo
+  echo "    Branch and tutorial name are provided by the calling scripts."
+  echo "    The other parameters can (also) be used by the tutorial scripts!"
+}
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+key="$1"
+
+case $key in
+    -h|--help)
+    usage
+    exit 0
+    ;;
+    -d|--dry-run)
+    echo "dry run: don't start anything!"
+    DRY_RUN=true
+    shift # past argument
+    ;;
+    -r|--repository)
+    REPOSITORY="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    -n|--network)
+    NETWORK="$2"
+    shift # past argument
+    shift # past value
+    ;;
+    *)    # unknown option
+    POSITIONAL+=("$1") # save it in an array for later
+    shift # past argument
+    ;;
+esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+
 echo "starting up" > te.log
 trap "exit 1" TERM
 export TOP_PID=$$
 
 if [ -f "local_env.rc" ]; then source local_env.rc; fi
+
+cp docker-compose.template.yml docker-compose.yml
+
+if [ "$NETWORK" != "" ]; then
+  echo "joining docker network '$NETWORK'."
+  echo "networks:" >> docker-compose.yml
+  echo "  default:" >> docker-compose.yml
+  echo "    external:" >> docker-compose.yml
+  echo "      name: $NETWORK" >> docker-compose.yml
+fi
+
+if [ "$REPOSITORY" != "" ]; then
+  sed -i -e "s|\\(.*\\)REPOSITORY_URL:.*|\\1REPOSITORY_URL: \"$REPOSITORY\"|g" docker-compose.yml
+fi
 
 function failed_to_start() {
   echo
@@ -19,46 +81,63 @@ function failed_to_start() {
 echo "Starting tutorial: $2."
 echo
 echo "If unresponsive for too long (> 30 seconds), abort by pressing ctrl-c."
-sleep 3
-
-BRANCH=$1 docker-compose pull
-BRANCH=$1 docker-compose up >> te.log &
-CNT=0
-TCNT=0
-echo "Waiting for the test-editor-web components to download ..."
-tail -f te.log | while read LOGLINE
-do
-   TCNT=$((TCNT+1))
-   CNT=$((CNT+1))
-   if [ "$TCNT" -eq 1 ]; then
-     echo "Starting up backends (initialize java, dropwizard, gradle) ..."
-   fi
-   echo -n "."
-   if [ "$CNT" -gt 35 ]; then CNT=0; echo ""; fi
-   echo $LOGLINE | grep -q -e "xtext_1.*INFO.*org.eclipse.jetty.server.Server: Started @.*ms" && pkill -P $$ tail
-   echo $LOGLINE | grep -q -e "xtext_1 exited with code" && pkill -P $$ tail && failed_to_start
-done
-echo ""
-echo "Backends initialized."
-echo -n "Starting "
+if [ "$DRY_RUN" == "" ]; then
+  sleep 3
+  BRANCH=$1 docker-compose pull
+  BRANCH=$1 docker-compose up >> te.log &
+  CNT=0
+  TCNT=0
+  echo "Waiting for the test-editor-web components to download ..."
+  tail -f te.log | while read LOGLINE
+  do
+    TCNT=$((TCNT+1))
+    CNT=$((CNT+1))
+    if [ "$TCNT" -eq 1 ]; then
+      echo "Starting up backends (initialize java, dropwizard, gradle) ..."
+    fi
+    echo -n "."
+    if [ "$CNT" -gt 35 ]; then CNT=0; echo ""; fi
+    echo $LOGLINE | grep -q -e "xtext_1.*INFO.*org.eclipse.jetty.server.Server: Started @.*ms" && pkill -P $$ tail
+    echo $LOGLINE | grep -q -e "xtext_1 exited with code" && pkill -P $$ tail && failed_to_start
+  done
+  echo ""
+  echo "Backends initialized."
+  echo -n "Starting "
+fi
 
 FIREFOX=$(which firefox 2> /dev/null)
 CHROME=$(which chrome 2> /dev/null)
 CHROMIUM=$(which chromium-browser 2> /dev/null)
 
-if [ "$FIREFOX" != "" ]; then
-  echo "firefox ..."
-  $FIREFOX http://localhost:4200 &
-elif [ "$CHROMIUM" != "" ]; then
-  echo "chromium ..."
-  $CHROMIUM http://localhost:4200 &
-elif [ "$CHROME" != "" ]; then
-  echo "chrome ..."
-  $CHROME http://localhost:4200 &
-else
-  echo "browser failed."
-  echo "No valid browser found."
-  exit 1
+if [ "$DRY_RUN" == "" ]; then
+  if [ "$FIREFOX" != "" ]; then
+    echo "firefox ..."
+    $FIREFOX http://localhost:4200 &
+  elif [ "$CHROMIUM" != "" ]; then
+    echo "chromium ..."
+    $CHROMIUM http://localhost:4200 &
+  elif [ "$CHROME" != "" ]; then
+    echo "chrome ..."
+    $CHROME http://localhost:4200 &
+  else
+    echo "browser failed."
+    echo "No valid browser found."
+    exit 1
+  fi
 fi
+
+
+if [ "$DRY_RUN" != "" ]; then
+  echo "Configuration:"
+  echo " BRANCH: $1"
+  echo " TUTORIAL: $2"
+  echo " DRY_RUN: $DRY_RUN"
+  echo " REPOSITORY: $REPOSITORY"
+  echo " NETWORK: $NETWORK"
+  echo " FIREFOX: $FIREFOX"
+  echo " CHROMIUM: $CHROMIUM"
+  echo " CHROME: $CHROME"
+fi
+
 echo "Started test-editor-web"
 exit 0
