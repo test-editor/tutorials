@@ -1,2 +1,2 @@
 #!/bin/bash
-bash ../lib/run-tutorial hero-create-testcase-refactored "Create Hero - Test Case - Refactored"
+bash ../lib/run-tutorial hero-create-testcase-refactored "Create Hero - Test Case - Refactored" "$@"

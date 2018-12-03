@@ -18,6 +18,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 3
+    environment:
+      REPOSITORY_URL: "https://github.com/test-editor/language-examples"
   persistence:
     image: testeditor/persistence:snapshot
     ports:
