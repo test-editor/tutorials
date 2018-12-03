@@ -3,6 +3,8 @@ echo "starting up" > te.log
 trap "exit 1" TERM
 export TOP_PID=$$
 
+if [ -f "local_env.rc" ]; then source local_env.rc; fi
+
 function failed_to_start() {
   echo
   echo "Failed to start test-editor-web ..."
