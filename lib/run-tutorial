@@ -1,6 +1,6 @@
 #!/bin/bash
 function usage() {
-  echo "Helpscreen for $(basename $0) (option parameter apply to tutorial bash scripts, too, see details)"
+  echo "Helpscreen for $(basename $0) (command line arguments apply to tutorial bash scripts, too, see details)"
   echo "  PLEASE USE run-... TUTORIAL SCRIPTS. DO NOT USE THIS SCRIPT DIRECTLY."
   echo
   echo "  $(basename $0) <branch-name> <tutorial-name> -h|--help -r|--repository <repository-url> -n|--network <docker-network-to-join> -d|--dry-run"
