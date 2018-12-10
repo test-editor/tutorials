@@ -51,7 +51,7 @@ echo "starting up" > te.log
 trap "exit 1" TERM
 export TOP_PID=$$
 
-if [ -f "local_env.rc" ]; then source local_env.rc; fi
+if [ -f "local_env.rc" ]; then set -o allexport; source local_env.rc; set +o allexport; fi
 
 cp docker-compose.template.yml docker-compose.yml
 
