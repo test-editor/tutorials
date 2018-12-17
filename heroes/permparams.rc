@@ -1,0 +1,4 @@
+# permanent parameters (passed to each invocation of the tutorial scripts)
+#
+# -n <docker-network-to-use>
+# -r <repository-to-use>

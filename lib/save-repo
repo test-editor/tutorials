@@ -1,4 +1,4 @@
-#!/bin/bash
+#! /usr/bin/env bash
 REPOTAR=repo.$(date +%Y%m%d%H%M%S).tar.gz
 echo "Saving repository into local file $REPOTAR ..."
 docker exec heroes_persistence_1 tar -czf $REPOTAR /opt/testeditor/repo || exit 1

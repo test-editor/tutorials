@@ -1,2 +1,2 @@
-#!/bin/bash
-bash ../lib/run-tutorial hero-create-specification "Create Hero - Specification" "$@"
+#! /usr/bin/env bash
+bash ../lib/run-tutorial hero-create-specification "Create Hero - Specification" "$@" $(grep "^[^#;]" permparams.rc)
