@@ -1,2 +1,2 @@
-#!/bin/bash
-bash ../lib/run-tutorial hero-create-testcase "Create Hero - Test Case" "$@"
+#! /usr/bin/env bash
+bash ../lib/run-tutorial hero-create-testcase "Create Hero - Test Case" "$@" $(grep "^[^#;]" permparams.rc)
