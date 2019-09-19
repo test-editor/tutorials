@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+bash ../lib/run-tutorial hero-create-parameterized-testcase "Create Hero - Parameterized Test Case" "$@" $(grep "^[^#;]" permparams.rc)
