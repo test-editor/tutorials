@@ -62,6 +62,48 @@ services:
         condition: service_healthy
       sut:
         condition: service_healthy
+  testexecution:
+    image: testeditor/testexecution:snapshot
+    ports:
+      - "10080:8080"
+    environment:
+      ADD_KNOWN_HOSTS_DOMAIN: "gitrepo:22"
+      GIT_PRIVATE_KEY: |
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEowIBAAKCAQEArzrB3kd1m9MvTJJATgXHArLCYa++TLl8Ks0n2fz8tewX/5Av
+        s2rUzFdqB/+yeka9cf0kgGyI9VnUL6Q8sragYrJvuE4UBf5eWVAIDGaKsj2YMJAO
+        +7MPbN9WVd72fc0In0UPw24yL++jCfFyn39nvUAwq50ETraCJpdSbaiKAYT7MiJZ
+        nfczTXXcQqPjQH64UCuNT370RtVle89GrwFj22N0IARntNHkKkFPuM+toCd+xVXv
+        1nF6hofd14VZ/snnCG3MqNBF2/K3DzoyfkjhN+A6O1OYhGTL/DKw8QFLj5jPlF/4
+        KtW57Id8kNlaH0SoixbxKqsZMhOxXMyHYB3cFwIDAQABAoIBABb2UClcm+DLj8ss
+        7xhKUYXc/vPmH73WIJtLPwmlyUfdpFdtAZM1UKVmXxKlQzIaywCA96OMlXXxS4ji
+        sMGKhQHp+BHiyWTvrFVv014socgxohvbBNue30qZCas/CHX7xEF6v1IQwqrdcDQB
+        W8/i1ilKnBYhAUt/RxbfhYGxMER6fRl/nv92LYuE2tJWZ2x7Y0PPXGA+7XbUFhPn
+        4mwq2HCDpotPfxd1f7W6xq5u5A0BhXt6K0NlTI/YrOGQDjOT6flnF8jp5J6nldOR
+        CDNG5JAyiYAAa+GRmHgm8UZ7oOJb3on3GtIBxaG2fG5ZEU//Gz0SU8JHUmUqZe/x
+        4Q6/SSECgYEA2S1iLEJqxC2XspIYVkngMqxKQurdoeBRk7hT8yFhsKZIVDoDFPcC
+        PPVsvXw3In6WNZ3X8jNOes9eR+Vgq89qA/1rDyVCXLPPIsFtBHdrQugywz4Ylu7V
+        +YFYTMtTBNBq8scBPIWwtvlr3nJAaiYscdjvqhv3YCbvOLmqrDC94q0CgYEAzo27
+        RhEcM+7KTMTl4Q7cDjCAG4uFm62nFhYNzFZ/ugXiwQR4AsPf5N/cMKpdkRiT9Dp2
+        ChxDjTbyW5Kbclbl3K8qxKr4s11ucf07XGaFJmMFSo7Cs05UdHg/V3c2Gu2KH+Cj
+        Jq+epKYycnRIlRVXT/f6qJMU4VSwARfALAIsllMCgYA9jCQPYP86+6TLIaYuBh+4
+        nKUrE76d2qGj2JBKDgLOekFzRUGMVnhW6ELZ7HL/nppZNZN2e13ZZh1VCMd9yXlF
+        CjOmBiwpc3fXZLPNmT5XptCEDnwPgj43yJVKpjCv45T7mrRZ/5VWNZeBYiWpL4pW
+        9WDud6CCqmYPUGbzB5k4vQKBgEBNGwm69d6s7clsWmvvpk28h4ULsDJAow1bHDyK
+        iQSuJGMWMw4ZUC/+CJwVzT8IObcEJA8NsXHasyQSxdWYe8JxvYyv9PBRm7pcrQgc
+        2kKS/Oiy/KW5Ms13SbC+6dcEL8WwttmqPmbfXkEHNjlDBYVdm2izMQLczFXqwOZy
+        XtMFAoGBAIIeV2FyPpcm+4dpVKj6B3iGV6tX7yAMMVEXpe+dNxkd8czWcqdCD9ln
+        ciHSMfZCHwV2JuypIEuEwFwrZA33O4c/Kirly9Glo2yGKKG2+/q6FsE/ZGZUwXko
+        Nif1wG/IoutGlOiLwJFt1gOGVEgvFwW/desKO2mUp/E8zj+siSOq
+        -----END RSA PRIVATE KEY-----
+      TARGET_REPO: "ssh://git@gitrepo:22/git-server/repos/language-examples.git"
+      BRANCH_NAME: "tutorial/${BRANCH:-hero-create-specification}"
+      TIMEZONE: Europe/Berlin
+    depends_on:
+      gitrepo:
+        condition: service_healthy
+      sut:
+        condition: service_healthy
   xtext:
     image: testeditor/xtext:snapshot
     ports:
