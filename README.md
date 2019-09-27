@@ -13,6 +13,7 @@ The tour of heroes tutorials start scripts are all located in the `heroes` folde
 * `bash run-hero-create-specification` to start the specification tutorial
 * `bash run-hero-create-testcase` to start the test case tutorial
 * `bash run-hero-testcase-refactored` to start the tutorial that holds the final solution
+* `bash run-hero-create-parameterized-testcase` to start the parameterized test case tutorial (advanced topic)
 
 ## Stop / Restart tutorial
 
